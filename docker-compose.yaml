@@ -8,6 +8,12 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping","-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
     volumes:
       - mysql-task-data:/var/lib/mysql
@@ -23,7 +29,8 @@ services:
     restart: unless-stopped
 
     depends_on:
-      - mysql
+       mysql:
+         condition: service_healthy
 
     ports:
       - "3000:3000"
