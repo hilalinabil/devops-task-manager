@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: mysql-container
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWRD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - mysql-task-data:/var/lib/mysql
+
+    networks:
+      - task-network
+
+  backend:
+    build:
+       context: .
+    image: task-manager-backend
+    container_name: task-manager-backend-container
+    restart: unless-stopped
+
+    depends_on:
+      - mysql
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DB_HOST: mysql-container
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+
+    networks:
+      - task-network
+
+volumes:
+  mysql-task-data:
+
+networks:
+  task-network:
+
