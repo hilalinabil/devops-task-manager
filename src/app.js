@@ -23,6 +23,7 @@ app.use(helmet({
   }
 }));
 
+/*
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps, curl, etc.)
@@ -33,6 +34,11 @@ app.use(cors({
       callback(new Error('Blocked by CORS policy'));
     }
   },
+  credentials: true
+}));
+*/
+app.use(cors({
+  origin: true,
   credentials: true
 }));
 
